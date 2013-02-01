@@ -18,7 +18,7 @@ def suite():
     suite.addTest(design.suite())
     suite.addTest(http.suite())
     suite.addTest(multipart.suite())
-    suite.addTest(mapping.suite())
+    suite.addTest(old_mapping.suite())
     suite.addTest(view.suite())
     suite.addTest(couch_tests.suite())
     suite.addTest(package.suite())

@@ -20,7 +20,7 @@ __docformat__ = 'restructuredtext en'
 
 
 class ViewDefinition(object):
-    r"""Definition of a view stored in a specific design document.
+    u"""Definition of a view stored in a specific design document.
     
     An instance of this class can be used to access the results of the view,
     as well as to keep the view definition in the design document up to date
@@ -39,10 +39,10 @@ class ViewDefinition(object):
     even exist yet. That can be fixed using the `sync` method:
 
     >>> view.sync(db)                                       #doctest: +ELLIPSIS
-    [(True, '_design/tests', ...)]
+    [(True, u'_design/tests', u'...')]
     >>> design_doc = view.get_doc(db)
     >>> design_doc                                          #doctest: +ELLIPSIS
-    <Document '_design/tests'@'...' {...}>
+    <Document u'_design/tests'@u'...' {...}>
     >>> print design_doc['views']['all']['map']
     function(doc) {
         emit(doc._id, null);
@@ -50,16 +50,18 @@ class ViewDefinition(object):
 
     If you use a Python view server, you can also use Python functions instead
     of code embedded in strings:
-    
-    >>> def my_map(doc):
+   
+    This is BROKEN:
+
+    >> def my_map(doc):
     ...     yield doc['somekey'], doc['somevalue']
-    >>> view = ViewDefinition('test2', 'somename', my_map, language='python')
-    >>> view.sync(db)                                       #doctest: +ELLIPSIS
-    [(True, '_design/test2', ...)]
-    >>> design_doc = view.get_doc(db)
-    >>> design_doc                                          #doctest: +ELLIPSIS
-    <Document '_design/test2'@'...' {...}>
-    >>> print design_doc['views']['somename']['map']
+    >> view = ViewDefinition('test2', 'somename', my_map, language='python')
+    >> view.sync(db)                                       #doctest: +ELLIPSIS
+    [(True, u'_design/test2', ...)]
+    >> design_doc = view.get_doc(db)
+    >> design_doc                                          #doctest: +ELLIPSIS
+    <Document u'_design/test2'@u'...' {...}>
+    >> print design_doc['views']['somename']['map']
     def my_map(doc):
         yield doc['somekey'], doc['somevalue']
     
