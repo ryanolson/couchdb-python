@@ -1,0 +1,3 @@
+[submodule "schematics"]
+	path = schematics
+	url = git@github.com:ryanolson/schematics.git
