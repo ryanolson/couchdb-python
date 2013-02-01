@@ -9,7 +9,7 @@
 import unittest
 
 from couchdb.tests import client, couch_tests, design, http, multipart, \
-                          mapping, view, package, tools
+                          old_mapping, view, package, tools
 
 
 def suite():
