@@ -10,7 +10,8 @@ from decimal import Decimal
 import doctest
 import unittest
 
-from couchdb import design, mapping
+from couchdb import design
+from couchdb import old_mapping as mapping
 from couchdb.tests import testutil
 
 class DocumentTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
