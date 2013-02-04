@@ -109,6 +109,13 @@ requirements = []
 if sys.version_info < (2, 6):
     requirements += ['simplejson']
 
+class build_with_submodules(build):
+    def run(self):
+        if path.exists('.git'):
+            check_call(['git', 'submodule', 'init'])
+            check_call(['git', 'submodule', 'update'])
+        build.run(self)
+
 
 # Build setuptools-specific options (if installed).
 if not has_setuptools:
@@ -152,6 +159,6 @@ interface for the CouchDB server.""",
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     packages = ['couchdb', 'couchdb.tools', 'couchdb.tests', 'schematics'],
-    cmdclass = {'build_doc': build_doc, 'test_doc': test_doc},
+    cmdclass = {'build_doc': build_doc, 'test_doc': test_doc, 'build': build_with_submodules},
     **setuptools_options
 )
