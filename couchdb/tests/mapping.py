@@ -95,14 +95,6 @@ class ModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
         comments = ListType(ModelType(Comment))
 
 
-    class User(mapping.Document):
-        class AuthToken(Model):
-            token = UUIDType(auto_fill=True)
-            created_on = DateTimeType(default=datetime.datetime.utcnow)
-        email = EmailType()
-        password = MD5Type()
-        tokens = ListType(ModelType(AuthToken))
-        
     def testPost(self):
         post = self.Post(id='foo_bar', title="Foo bar")
         assert isinstance(post.comments, ListType.Proxy)
@@ -110,21 +102,38 @@ class ModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
         post.store(self.db)
         self.assertEqual(self.db['foo_bar']['comments'], [{u'author': u'myself', u'comment': u'blah blah blah'}])
 
+class UserModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
+
+    class User(mapping.Document):
+        class Token(Model):
+            token = UUIDType(auto_fill=True)
+            created_on = DateTimeType(default=datetime.datetime.utcnow)
+            device_info = DictType()
+        email = EmailType(required=True)
+        password = MD5Type(required=True)
+        tokens = ListType(ModelType(Token))
+        
     def testTokenCreation(self):
-        authtoken = self.User.AuthToken()
-        assert authtoken.token is not None
-        assert authtoken.created_on is not None
+        token = self.User.Token()
+        assert token.token is not None
+        assert token.created_on is not None
 
     def testInvalidUser(self):
         user = self.User()
         user.email = 'invalid@email'
         self.assertRaises( Exception, user.store, self.db)
 
+    def testValidUser(self):
+        user = self.User(email='ryan.olson@gmail.com', password=MD5Type.generate('secret'))
+        user.store(self.db)
+        self.assertEqual(self.db[user.id][u'email'], u'ryan.olson@gmail.com')
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocTestSuite(mapping))
     suite.addTest(unittest.makeSuite(DocumentTestCase, 'test'))
     suite.addTest(unittest.makeSuite(ModelTypeTestCase, 'test'))
+    suite.addTest(unittest.makeSuite(UserModelTypeTestCase, 'test'))
 #   suite.addTest(unittest.makeSuite(ListFieldTestCase, 'test'))
 #   suite.addTest(unittest.makeSuite(WrappingTestCase, 'test'))
     return suite
