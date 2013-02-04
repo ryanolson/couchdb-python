@@ -4,7 +4,7 @@ from couchdb.mapping import Document
 from schematics.models import Model
 from schematics.types import *
 from schematics.types.compound import ListType, ModelType
-from schematics.serialize import wholelist, whitelist, blacklist, make_safe_dict, make_safe_json
+from schematics.serialize import wholelist, whitelist, blacklist
 
 class AuthUser(Document):
     class Session(Model):
@@ -13,14 +13,15 @@ class AuthUser(Document):
         device_info = DictType(default=None)
         class Options:
            roles = {
-              'test': whitelist('created_on', 'device_info')
+              'mysessions': whitelist('created_on', 'device_info')
            }
     email = EmailType(required=True)
     sessions = ListType(ModelType(Session))
     _password = MD5Type(required=True,print_name="password")
     class Options:
         roles = {
-           'test': blacklist('_password')
+           'me': blacklist('_password','sessions'),
+           'mysessions': blacklist('_password')
         }
 
     def __init__(self, *args, **kwargs):
@@ -46,8 +47,10 @@ class AuthUser(Document):
 
 class User(AuthUser):
     first_name = StringType()
+    # TODO - Figure out how User can inherit Options from AuthUser
     class Options:
         roles = {
-           'test': blacklist('_password')
+           'me': blacklist('_password','sessions'),
+           'mysessions': blacklist('_password')
         }
 

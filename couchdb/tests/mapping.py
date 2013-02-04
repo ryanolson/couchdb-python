@@ -138,11 +138,11 @@ class UserModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
         user.sessions.append(User.Session())
         user.store(self.db)
         self.assertEqual(self.db[user.id][u'email'], u'ryan.olson@gmail.com')
-        assert type(make_safe_dict(User,user,'test')) is dict
-        json = make_safe_json(User,user,'test')
+        json = make_safe_json(User,user,'mysessions')
         assert 'password' not in json
         assert 'token' not in json
         assert 'email' in json
+        assert 'created_on' in json
         assert self.db[user.id]['password'] is not None
         u2 = User.load(self.db, user.id)
         self.assertTrue(u2.challenge_password(MD5Type.generate('secret')))
