@@ -20,6 +20,7 @@ import urlparse
 
 from couchdb import client, http
 from couchdb.tests import testutil
+from schematics.validation import validate_instance
 
 
 class ServerTestCase(testutil.TempDatabaseMixin, unittest.TestCase):

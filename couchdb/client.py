@@ -28,8 +28,10 @@ import os
 from types import FunctionType
 from inspect import getsource
 from textwrap import dedent
+from couchdb.mapping import Document
 import re
 import warnings
+from schematics.validation import validate_instance
 
 from couchdb import http, json
 
@@ -711,7 +713,7 @@ class Database(object):
                              reduce_fun, language=language,
                              wrapper=wrapper)(**options)
 
-    def update(self, documents, **options):
+    def update(self, documents, validate=True, **options):
         """Perform a bulk update or insertion of the given documents using a
         single HTTP request.
 
@@ -751,7 +753,11 @@ class Database(object):
         """
         docs = []
         for doc in documents:
-            if isinstance(doc, dict):
+            if isinstance(doc, Document):
+                results = validate_instance(doc)
+                if results.tag == 'OK':
+                   docs.append(doc)
+            elif isinstance(doc, dict):
                 docs.append(doc)
             elif hasattr(doc, 'items'):
                 docs.append(dict(doc.items()))

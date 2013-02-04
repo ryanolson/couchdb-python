@@ -115,6 +115,11 @@ class ModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
         assert authtoken.token is not None
         assert authtoken.created_on is not None
 
+    def testInvalidUser(self):
+        user = self.User()
+        user.email = 'invalid@email'
+        self.assertRaises( Exception, user.store, self.db)
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocTestSuite(mapping))

@@ -2,6 +2,7 @@ import inspect
 from schematics.models import Model
 from schematics.types import *
 from schematics.types.compound import ListType
+from schematics.validation import validate_instance
 
 class Document(Model):
 
@@ -65,9 +66,13 @@ class Document(Model):
             return None
         return cls.wrap(doc)
 
-    def store(self, db):
+    def store(self, db, validate=True):
         """Store the document in the given database."""
-        db.save(self._data)
+        results = validate_instance(self)
+        if results.tag == 'OK':
+           db.save(self._data)
+        else:
+           raise Exception
         return self
 
     @classmethod
