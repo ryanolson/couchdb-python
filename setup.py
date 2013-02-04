@@ -13,7 +13,7 @@ from glob import glob
 import os
 import sys
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
     has_setuptools = True
 except ImportError:
     from distutils.core import setup
@@ -131,16 +131,16 @@ else:
 
 
 setup(
-    name = 'CouchDB',
-    version = '0.9',
-    description = 'Python library for working with CouchDB',
+    name = 'CouchDB+Schematics',
+    version = '0.1beta',
+    description = 'Python library for working with CouchDB w/ Schematics Mapping & Validation',
     long_description = \
 """This is a Python library for CouchDB. It provides a convenient high level
 interface for the CouchDB server.""",
-    author = 'Christopher Lenz',
-    author_email = 'cmlenz@gmx.de',
+    author = 'Ryan Olson',
+    author_email = 'rmolson@gmail.com',
     license = 'BSD',
-    url = 'http://code.google.com/p/couchdb-python/',
+    url = 'https://github.com/ryanolson/couchdb-python-schematics',
 
     classifiers = [
         'Development Status :: 4 - Beta',
@@ -151,7 +151,7 @@ interface for the CouchDB server.""",
         'Topic :: Database :: Front-Ends',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    packages = ['couchdb', 'couchdb.tools', 'couchdb.tests'],
+    packages = ['couchdb', 'couchdb.tools', 'couchdb.tests', 'schematics'],
     cmdclass = {'build_doc': build_doc, 'test_doc': test_doc},
     **setuptools_options
 )
