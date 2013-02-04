@@ -151,7 +151,7 @@ interface for the CouchDB server.""",
         'Topic :: Database :: Front-Ends',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    packages = ['couchdb', 'couchdb.tools', 'couchdb.tests', 'schematics'],
+    packages = ['couchdb', 'couchdb.tools', 'couchdb.tests'],
     cmdclass = {'build_doc': build_doc, 'test_doc': test_doc},
     **setuptools_options
 )
