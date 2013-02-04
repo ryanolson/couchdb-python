@@ -109,7 +109,7 @@ requirements = []
 if sys.version_info < (2, 6):
     requirements += ['simplejson']
 
-class build_with_submodules(build):
+class build_with_submodules(Command):
     def run(self):
         if path.exists('.git'):
             check_call(['git', 'submodule', 'init'])
