@@ -5,11 +5,13 @@ from schematics.types.compound import ListType
 from schematics.validation import validate_instance
 
 class Document(Model):
+    doc_type = StringType()
 
     def __init__(self, id=None, *args, **kwargs):
         super(Document, self).__init__(*args,**kwargs)
         if id:
            self.id = id
+        self.doc_type = self.__class__.__name__
 
     def __repr__(self):
         return '<%s %r@%r %r>' % (type(self).__name__, self.id, self.rev,
