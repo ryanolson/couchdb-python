@@ -15,9 +15,10 @@ from couchdb import design, mapping
 from schematics.models import Model
 from schematics.types import *
 from schematics.types.compound import ListType, ModelType
-from schematics.serialize import wholelist, whitelist, blacklist, make_safe_dict, make_safe_json
+from schematics.serialize import wholelist, whitelist, blacklist, make_safe_dict, make_safe_json, to_dict
 
 from couchdb.tests import testutil
+from couchdb.tests.fixtures import User
 
 class DocumentTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
 
@@ -105,58 +106,46 @@ class ModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
 
 class UserModelTypeTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
 
-    class BaseUser(mapping.Document):
-        class Session(Model):
-            token = UUIDType(auto_fill=True)
-            created_on = DateTimeType(default=datetime.datetime.utcnow)
-            device_info = DictType(default=None)
-            class Options:
-               roles = {
-                  'test': whitelist('created_on', 'device_info')
-               }
-        email = EmailType(required=True)
-        password = MD5Type(required=True)
-        sessions = ListType(ModelType(Session))
-        class Options:
-           roles = {
-              'test': blacklist('password')
-           }
-
-    class User(BaseUser):
-        first_name = StringType()
-        # options are not inheritable
-        class Options:
-           roles = {
-              'test': blacklist('password')
-           }
-           
-        
     def testSessionCreation(self):
-        token = self.User.Session()
+        token = User.Session()
         assert token.token is not None
         assert token.created_on is not None
 
+    def testPasswordSetterWithKeywordOnInitialization(self):
+        user = User(email='user1@gmail.com',password='pass1')
+        self.assertNotEqual(user.password, MD5Type.generate('pass1'))
+        self.assertTrue(user.challenge_password('pass1'))
+
+    def testSetPassword(self):
+        user = User(email='user1@gmail.com')
+        user.password = 'pass1'
+        self.assertNotEqual(user.password, MD5Type.generate('pass1'))
+        self.assertTrue(user.challenge_password('pass1'))
+
     def testInvalidUser(self):
-        user = self.User()
+        user = User()
         user.email = 'invalid@email'
         self.assertRaises( Exception, user.store, self.db)
 
     def testValidUser(self):
-        user = self.User(email='ryan.olson@gmail.com', password=MD5Type.generate('secret'))
+        user = User(email='ryan.olson@gmail.com', password=MD5Type.generate('secret'))
+        self.assertTrue(user.challenge_password(MD5Type.generate('secret')))
         user.store(self.db)
         self.assertEqual(self.db[user.id][u'email'], u'ryan.olson@gmail.com')
 
     def testRoles(self):
-        user = self.User(email='ryan.olson@gmail.com', password=MD5Type.generate('secret'))
-        user.sessions.append(self.User.Session())
+        user = User(email='ryan.olson@gmail.com', password=MD5Type.generate('secret'))
+        user.sessions.append(User.Session())
         user.store(self.db)
         self.assertEqual(self.db[user.id][u'email'], u'ryan.olson@gmail.com')
-        assert type(make_safe_dict(self.User,user,'test')) is dict
-        json = make_safe_json(self.User,user,'test')
-        #print json
+        assert type(make_safe_dict(User,user,'test')) is dict
+        json = make_safe_json(User,user,'test')
         assert 'password' not in json
         assert 'token' not in json
         assert 'email' in json
+        assert self.db[user.id]['password'] is not None
+        u2 = User.load(self.db, user.id)
+        self.assertTrue(u2.challenge_password(MD5Type.generate('secret')))
 
 def suite():
     suite = unittest.TestSuite()

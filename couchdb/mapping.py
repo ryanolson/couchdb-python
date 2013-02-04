@@ -2,9 +2,12 @@ import inspect
 from schematics.models import Model
 from schematics.types import *
 from schematics.types.compound import ListType
+from schematics.serialize import to_dict
 from schematics.validation import validate_instance
 
 class Document(Model):
+    _id = StringType()
+    _rev = StringType()
     doc_type = StringType()
 
     def __init__(self, id=None, *args, **kwargs):
@@ -19,13 +22,15 @@ class Document(Model):
                                         if k not in ('_id', '_rev')]))
 
     def _get_id(self):
+        return self._id
         if hasattr(self._data, 'id'): # When data is client.Document
             return self._data.id
         return self._data.get('_id')
     def _set_id(self, value):
         if self.id is not None:
             raise AttributeError('id can only be set on new documents')
-        self._data['_id'] = value
+        self._id = value
+        #self._data['_id'] = value
     id = property(_get_id, _set_id, doc='The document ID')
 
     @property
@@ -50,8 +55,8 @@ class Document(Model):
 
     @classmethod
     def wrap(cls, data):
-        instance = cls()
-        instance._data = data
+        instance = cls(**data)
+        #instance._data = data
         return instance
 
     @classmethod
@@ -72,7 +77,9 @@ class Document(Model):
         """Store the document in the given database."""
         results = validate_instance(self)
         if results.tag == 'OK':
-           db.save(self._data)
+           id, rev = db.save(to_dict(self))
+           self._id = id
+           self._rev = rev
         else:
            raise Exception
         return self

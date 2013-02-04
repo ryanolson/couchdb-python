@@ -138,7 +138,6 @@ setup(
 """This is a Python library for CouchDB. It provides a convenient high level
 interface for the CouchDB server.""",
     author = 'Ryan Olson',
-    author_email = 'rmolson@gmail.com',
     license = 'BSD',
     url = 'https://github.com/ryanolson/couchdb-python-schematics',
 
