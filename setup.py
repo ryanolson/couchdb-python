@@ -22,13 +22,14 @@ import sys
 
 
 setup(
-    name = 'CouchDB+Schematics',
+    name = 'couchdb-python'
     version = '2.0.0dev',
     description = 'Python library for working with CouchDB w/ Schematics Mapping & Validation',
     long_description = \
 """This is a Python library for CouchDB. It provides a convenient high level
 interface for the CouchDB server.""",
     license = 'BSD',
+    zip_safe=False,
     url = 'https://github.com/ryanolson/couchdb-python-schematics',
 
     classifiers = [
@@ -48,7 +49,6 @@ interface for the CouchDB server.""",
     ],
 
     install_requires = [
-        'simplejson',
         'schematics>=2.0.0dev'
     ]
 )
