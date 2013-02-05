@@ -23,7 +23,7 @@ import sys
 
 setup(
     name = 'CouchDB+Schematics',
-    version = '0.1beta',
+    version = '2.0.0dev',
     description = 'Python library for working with CouchDB w/ Schematics Mapping & Validation',
     long_description = \
 """This is a Python library for CouchDB. It provides a convenient high level
@@ -44,11 +44,11 @@ interface for the CouchDB server.""",
     packages = ['couchdb', 'couchdb.tools', 'couchdb.tests'],
 
     dependency_links = [
-        'git+https://github.com/ryanolson/schematics.git/tarball/master.tar.gz#egg=schematics-0.5.1alpha'
+        'http://github.com/ryanolson/schematics/tarball/master#egg=schematics-2.0.0dev'
     ],
 
     install_requires = [
         'simplejson',
-        'schematics>=0.5.1alpha'
+        'schematics>=2.0.0dev'
     ]
 )
