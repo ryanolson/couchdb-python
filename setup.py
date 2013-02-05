@@ -22,7 +22,7 @@ import sys
 
 
 setup(
-    name = 'couchdb-python'
+    name = 'couchdb-python',
     version = '2.0.0dev',
     description = 'Python library for working with CouchDB w/ Schematics Mapping & Validation',
     long_description = \
