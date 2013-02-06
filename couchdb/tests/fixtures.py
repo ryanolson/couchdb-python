@@ -1,5 +1,5 @@
-## BaseUser
-
+# -*- coding: utf-8 -*-
+import datetime
 from couchdb.mapping import Document
 from schematics.models import Model
 from schematics.types import *

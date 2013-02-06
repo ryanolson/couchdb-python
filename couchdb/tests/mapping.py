@@ -9,7 +9,6 @@
 from decimal import Decimal
 import doctest
 import unittest
-import datetime
 
 from couchdb import design, mapping
 from schematics.models import Model
