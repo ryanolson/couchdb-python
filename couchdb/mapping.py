@@ -54,9 +54,12 @@ class Document(Model):
         return retval
 
     @classmethod
-    def wrap(cls, data):
+    def wrap(cls, data, safe=False):
+        if safe:
+           instance = cls()
+           instance._data = data
+           return instance
         instance = cls(**data)
-        #instance._data = data
         return instance
 
     @classmethod
