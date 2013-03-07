@@ -723,7 +723,7 @@ class Database(object):
         ...     Document(type='Person', name='John Doe'),
         ...     Document(type='Person', name='Mary Jane'),
         ...     Document(type='City', name='Gotham City')
-        ... ]):
+        ... ],validate=False):
         ...     print repr(doc) #doctest: +ELLIPSIS
         (True, u'...', u'...')
         (True, u'...', u'...')
@@ -754,8 +754,11 @@ class Database(object):
         docs = []
         for doc in documents:
             if isinstance(doc, Document):
-                results = validate_instance(doc)
-                if results.tag == 'OK':
+                if validate:
+                   results = validate_instance(doc)
+                   if results.tag == 'OK':
+                      docs.append(doc)
+                else:
                    docs.append(doc)
             elif isinstance(doc, dict):
                 docs.append(doc)

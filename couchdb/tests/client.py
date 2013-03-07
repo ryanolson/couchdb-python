@@ -88,7 +88,7 @@ class ServerTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
 
         doc = b[id]
         doc['test'] = 'b'
-        b.update([doc])
+        b.update([doc],validate=False)
         self.server.replicate(bname, aname)
         self.assertEquals(a[id]['test'], 'b')
         self.assertEquals(b[id]['test'], 'b')
