@@ -78,13 +78,11 @@ class Document(Model):
 
     def store(self, db, validate=True):
         """Store the document in the given database."""
-        results = validate_instance(self)
-        if results.tag == 'OK':
-           id, rev = db.save(to_dict(self))
-           self._id = id
-           self._rev = rev
-        else:
-           raise Exception
+        if validate:
+           validate_instance(self)
+        id, rev = db.save(to_dict(self))
+        self._id = id
+        self._rev = rev
         return self
 
     @classmethod

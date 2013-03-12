@@ -29,6 +29,8 @@ class DocumentTestCase(testutil.TempDatabaseMixin, unittest.TestCase):
             d = DictType()
         a = Test(id='a')
         b = Test()
+        # TODO - fix DictType to default to an empty dict rather than None
+        a.d = { }
         a.d['x'] = True
         b.id = 'b'
         self.assertTrue(a.d.get('x'))
