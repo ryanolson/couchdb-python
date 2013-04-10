@@ -200,7 +200,7 @@ class ViewDefinition(object):
                     callback(doc)
                 docs.append(doc)
 
-        return db.update(docs)
+        return db.update(docs,validate=False)
 
 
 def _strip_decorators(code):
